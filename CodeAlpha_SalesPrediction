@@ -1,6 +1,4 @@
-# ============================================
 # CodeAlpha - Sales Prediction
-# ============================================
 
 # Import Libraries
 import pandas as pd
