@@ -1,54 +1,96 @@
-# ============================================
 # CodeAlpha - Unemployment Analysis
-# ============================================
+# STEP 1: Install KaggleHub
 
-# Import Libraries
+!pip install kagglehub -q
+
+# STEP 2: Import Libraries
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import kagglehub
+import os
 
-# Upload Dataset
-from google.colab import files
-uploaded = files.upload()
+# STEP 3: Download Dataset
 
-# Read CSV File
-df = pd.read_csv(next(iter(uploaded)))
+path = kagglehub.dataset_download("pantanjali/unemployment-dataset")
+print("Dataset Folder Path:", path)
 
-# Show Dataset
+# STEP 4: Show Files Inside Dataset Folder
+
+files = os.listdir(path)
+print("\nFiles in Dataset Folder:")
+print(files)
+
+# STEP 5: Find CSV File Automatically
+
+csv_file = None
+
+for file in files:
+    if file.endswith(".csv"):
+        csv_file = os.path.join(path, file)
+
+print("\nCSV File Path:")
+print(csv_file)
+
+# STEP 6: Read CSV File
+
+df = pd.read_csv(csv_file)
+
+# STEP 7: Show Dataset
+
+print("\n===== FIRST 5 ROWS =====")
 print(df.head())
 
-# Dataset Info
+# STEP 8: Dataset Info
+
+print("\n===== DATASET INFO =====")
 print(df.info())
 
-# Check Missing Values
+# STEP 9: Missing Values
+
+print("\n===== MISSING VALUES =====")
 print(df.isnull().sum())
 
-# Rename Columns (if needed)
+# STEP 10: Clean Column Names
+
 df.columns = [col.strip() for col in df.columns]
 
-# Convert Date Column
+print("\n===== COLUMN NAMES =====")
+print(df.columns)
+
+# STEP 11: Convert Date Column
+
 if 'Date' in df.columns:
     df['Date'] = pd.to_datetime(df['Date'])
 
-# Basic Statistics
+# STEP 12: Statistical Summary
+
+print("\n===== STATISTICAL SUMMARY =====")
 print(df.describe())
 
-# Plot Unemployment Trend
+# STEP 13: Unemployment Trend
+
 plt.figure(figsize=(12,6))
 
 if 'Date' in df.columns and 'Estimated Unemployment Rate (%)' in df.columns:
+
     sns.lineplot(
         x='Date',
         y='Estimated Unemployment Rate (%)',
         data=df
     )
 
-plt.title("Unemployment Rate Over Time")
-plt.xticks(rotation=45)
-plt.show()
+    plt.title("Unemployment Rate Over Time")
 
-# State-wise Analysis
+    plt.xticks(rotation=45)
+
+    plt.show()
+
+# STEP 14: State-wise Analysis
+
 if 'Region' in df.columns:
+
     plt.figure(figsize=(14,6))
 
     sns.barplot(
@@ -58,11 +100,15 @@ if 'Region' in df.columns:
     )
 
     plt.xticks(rotation=90)
+
     plt.title("State-wise Unemployment Rate")
+
     plt.show()
 
-# Covid Impact Analysis
+# STEP 15: Covid Impact Analysis
+
 if 'Date' in df.columns:
+
     covid_period = df[df['Date'] >= '2020-03-01']
 
     plt.figure(figsize=(12,6))
@@ -74,7 +120,11 @@ if 'Date' in df.columns:
     )
 
     plt.title("Covid-19 Impact on Unemployment")
+
     plt.xticks(rotation=45)
+
     plt.show()
 
-print("\nAnalysis Completed Successfully!")
+# STEP 16: Final Message
+
+print(" Analysis Completed Successfully ")
